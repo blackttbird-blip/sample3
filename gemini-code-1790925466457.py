@@ -36,7 +36,7 @@ else:
         st.session_state.current_character = character
         
         # 🌟 은정이 계정에 맞는 최신 2.5 flash 모델로 확정!
-        model = genai.GenerativeModel('gemini-2.5-flash')
+        model = genai.GenerativeModel('gemini-3.8-flash')
         st.session_state.chat_session = model.start_chat(history=[])
         
         setup_prompt = f"너는 김유정의 소설 '동백꽃'의 '{character}'야. 독자의 질문에 소설 속 인물의 성격과 말투로 대답해. 가끔은 능청스럽게 거짓말도 섞어봐."
