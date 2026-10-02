@@ -17,10 +17,18 @@ if mode == "교사 관리 화면":
     st.subheader("👨‍🏫 교사 설정 및 자료 업로드")
     password = st.text_input("교사 비밀번호를 입력하세요:", type="password")
     
-    if password == "1234": # 원하는 비밀번호로 수정해서 사용해!
+    # 은정이 지정한 비밀번호 6460 적용
+    if password == "6460": 
         st.success("관리자 모드에 접속되었습니다.")
-        st.info("이곳에 소설 본문이나 참고할 만한 학습 자료를 업로드하는 창을 추가할 수 있어.")
-        # 추가적인 프롬프트 설정이나 자료 업로드 코드 작성 위치
+        st.info("소설 본문이나 참고할 만한 학습 자료를 업로드해 주세요.")
+        
+        # 파일 업로드 창 추가
+        uploaded_file = st.file_uploader("학습 자료 및 소설 본문 업로드 (PDF, TXT, DOCX)", type=["txt", "pdf", "docx"])
+        
+        if uploaded_file is not None:
+            st.write("✅ 파일이 성공적으로 업로드되었습니다:", uploaded_file.name)
+            # 추후 이 파일을 제미나이 프롬프트에 활용하는 로직을 이곳에 추가할 수 있어.
+            
     elif password:
         st.error("비밀번호가 일치하지 않습니다.")
 
@@ -32,11 +40,9 @@ else:
         st.session_state.messages = []
         st.session_state.current_character = character
         
-        # 모델 및 시스템 설정 (버전 충돌을 피하기 위해 가장 기본 형태 사용)
         model = genai.GenerativeModel('gemini-1.5-flash')
         st.session_state.chat_session = model.start_chat(history=[])
         
-        # 역할 부여 프롬프트 강제 주입
         setup_prompt = f"너는 김유정의 소설 '동백꽃'의 '{character}'야. 독자의 질문에 소설 속 인물의 성격과 말투로 대답해."
         st.session_state.chat_session.send_message(setup_prompt)
 
