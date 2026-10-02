@@ -20,14 +20,14 @@ if "messages" not in st.session_state or st.session_state.get("current_character
     st.session_state.question_count = 5
     st.session_state.current_character = character
     
-    # 구버전 패키지에서도 안정적으로 돌아가는 gemini-pro 모델 사용
-    model = genai.GenerativeModel('gemini-pro')
-    st.session_state.chat_session = model.start_chat(history=[])
+    # 최신 모델(gemini-1.5-flash)과 시스템 명령어(System Instruction)를 사용한 완벽한 역할 부여
+    system_instruction = f"너는 김유정의 소설 '동백꽃'의 '{character}'야. 독자의 질문에 소설 속 인물의 성격과 말투로 대답해. 가끔은 능청스럽게 거짓말도 섞어봐."
+    model = genai.GenerativeModel('gemini-1.5-flash', system_instruction=system_instruction)
     
-    # 역할 부여를 위한 초기 숨김 프롬프트 전송 (구버전 호환 방식)
-    system_prompt = f"지금부터 너는 김유정의 소설 '동백꽃'의 '{character}'야. 독자의 질문에 소설 속 인물의 성격과 말투로 대답해. 가끔은 능청스럽게 거짓말도 섞어봐. 알겠지?"
-    st.session_state.chat_session.send_message(system_prompt)
+    # 대화 기록을 기억하는 세션 시작
+    st.session_state.chat_session = model.start_chat(history=[])
 
+# 남은 횟수 및 안내 문구 표시
 st.write(f"**남은 질문: {st.session_state.question_count}회**")
 st.info("인물에게 궁금한 점을 질문해보세요! 총 5회의 기회가 주어지며, 인물이 거짓말을 섞어 말할 수도 있으니 주의 깊게 들어보세요.")
 
@@ -41,12 +41,15 @@ if prompt := st.chat_input("인물에게 궁금한 점을 물어보세요..."):
     if st.session_state.question_count <= 0:
         st.warning("더 이상 질문할 수 없습니다. 5회의 기회를 모두 사용하셨습니다.")
     else:
+        # 사용자 질문 출력 및 저장
         st.session_state.messages.append({"role": "user", "content": prompt})
         with st.chat_message("user"):
             st.markdown(prompt)
 
+        # 질문 횟수 차감
         st.session_state.question_count -= 1
 
+        # 제미나이 답변 출력 및 저장
         with st.chat_message("assistant"):
             try:
                 response = st.session_state.chat_session.send_message(prompt)
