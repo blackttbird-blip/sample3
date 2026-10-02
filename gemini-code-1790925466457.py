@@ -21,7 +21,7 @@ if "messages" not in st.session_state or st.session_state.get("current_character
     st.session_state.current_character = character
     
     # 구버전 패키지에서도 안정적으로 돌아가는 gemini-pro 모델 사용
-    model = genai.GenerativeModel('gemini-1.5-flash')
+    model = genai.GenerativeModel('gemini-pro')
     st.session_state.chat_session = model.start_chat(history=[])
     
     # 역할 부여를 위한 초기 숨김 프롬프트 전송 (구버전 호환 방식)
