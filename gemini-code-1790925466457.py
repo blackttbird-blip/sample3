@@ -20,9 +20,9 @@ if "messages" not in st.session_state or st.session_state.get("current_character
     st.session_state.question_count = 5
     st.session_state.current_character = character
     
-    # 최신 모델(gemini-1.5-flash)과 시스템 명령어(System Instruction)를 사용한 완벽한 역할 부여
+    # 모델 이름을 확실하게 인식하도록 'gemini-1.5-flash-latest'로 수정
     system_instruction = f"너는 김유정의 소설 '동백꽃'의 '{character}'야. 독자의 질문에 소설 속 인물의 성격과 말투로 대답해. 가끔은 능청스럽게 거짓말도 섞어봐."
-    model = genai.GenerativeModel('gemini-1.5-flash', system_instruction=system_instruction)
+    model = genai.GenerativeModel('gemini-1.5-flash-latest', system_instruction=system_instruction)
     
     # 대화 기록을 기억하는 세션 시작
     st.session_state.chat_session = model.start_chat(history=[])
